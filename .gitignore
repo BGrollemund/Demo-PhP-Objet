@@ -1,0 +1,6 @@
+.*
+!.htaccess
+!.gitignore
+!assets/img/users/.gitkeep
+!airBnB/Http/Middleware/.gitkeep
+vendor/*

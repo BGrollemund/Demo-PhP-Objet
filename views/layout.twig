@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title> {{ htmlTitle( title ) }} </title>
+
+    <link rel="stylesheet" href="{{ asset('vendor/bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
+<body class="d-flex flex-column min-vh-100">
+{% block header %}
+    <header class="bg-dark text-light">
+        <div class="container d-flex justify-content-between py-3">
+            <div>
+                {% block logo %}
+                    <a href="{{ route('home') }}">
+                        <img src="{{ asset( 'img/logo.png' ) }}" alt="">
+                        <span>{{ siteFullName() }}</span>
+                    </a>
+                {% endblock %}
+            </div>
+
+            <div>
+                {% block top_links %}{% endblock %}
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+<main class="flex-grow-1 bg-light">
+    <div class="container py-3">
+        {% block content_header %}
+            <h1>{{ title }}</h1>
+        {% endblock %}
+
+        {% block content %}
+
+        {% endblock %}
+    </div>
+</main>
+
+<footer class="bg-secondary text-light">
+    <div class="container py-3">
+        Copyright &copy;2019-2020 - ERN2019
+    </div>
+</footer>
+
+<script src="{{ asset( 'vendor/jquery/jquery-3.4.1.min.js' ) }}"></script>
+<script src="{{ asset( 'vendor/bootstrap/bootstrap.bundle.min.js' ) }}"></script>
+</body>
+</html>

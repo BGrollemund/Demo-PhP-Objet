@@ -1,0 +1,6 @@
+{
+    "require": {
+        "miladrahimi/phprouter": "4.*",
+        "twig/twig": "^3.0"
+    }
+}
