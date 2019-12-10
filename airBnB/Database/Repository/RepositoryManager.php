@@ -13,8 +13,14 @@ class RepositoryManager
     private $mediumRepository = null;
     public function mediumRepository(): MediumRepository { return $this->mediumRepository; }
 
+    private $profileRepository = null;
+    public function profileRepository(): ProfileRepository { return $this->profileRepository; }
+
     private $roleRepository = null;
     public function roleRepository(): RoleRepository { return $this->roleRepository; }
+
+    private $userRepository = null;
+    public function userRepository(): UserRepository { return $this->userRepository; }
 
     public static function manager(): ?self
     {
@@ -28,7 +34,9 @@ class RepositoryManager
         $pdo = Database::connection();
 
         $this->mediumRepository = new MediumRepository($pdo);
+        $this->profileRepository = new ProfileRepository($pdo);
         $this->roleRepository = new RoleRepository($pdo);
+        $this->userRepository = new UserRepository($pdo);
     }
 
     private function __clone() {}

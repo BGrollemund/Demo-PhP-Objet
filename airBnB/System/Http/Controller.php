@@ -10,8 +10,5 @@ class Controller
 {
     protected $twig = null;
 
-    public function __construct()
-    {
-        $this->twig = Airbnb::app()->getTwig();
-    }
+    public function __construct() { $this->twig = Airbnb::app()->getTwig(); }
 }

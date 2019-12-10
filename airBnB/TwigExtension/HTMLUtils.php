@@ -4,9 +4,8 @@
 namespace airBnB\TwigExtension;
 
 
-use Airbnb\Airbnb;
-
 use airBnB\System\Settings;
+
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -16,7 +15,7 @@ class HTMLUtils extends AbstractExtension
     {
         return [
             new TwigFunction('htmlTitle', [ $this, 'getHTMLTitle'] ),
-            new TwigFunction('siteFullName', [ $this, 'getSiteFullName'] ),
+            new TwigFunction('siteFullName', [ $this, 'getSiteFullName'] )
         ];
     }
 

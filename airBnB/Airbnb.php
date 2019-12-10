@@ -4,10 +4,20 @@
 namespace airbnb;
 
 
+use airBnB\Http\Middleware\AuthMiddleware;
+use airBnB\Http\Middleware\RenterMiddleware;
+use airBnB\Http\Middleware\UserMiddleware;
+use airBnB\Http\Middleware\VisitorMiddleware;
 use airBnB\Http\Routes;
-
+use airBnB\System\Http\Auth;
+use airBnB\System\Http\Register;
 use airBnB\TwigExtension\HTMLUtils;
 use airBnB\TwigExtension\URLUtils;
+
+use Throwable;
+use Zend\Diactoros\Response\HtmlResponse;
+
+use MiladRahimi\PhpRouter\Exceptions\RouteNotFoundException;
 use MiladRahimi\PhpRouter\Router;
 
 use Twig\Environment;
@@ -15,6 +25,12 @@ use Twig\Loader\FilesystemLoader;
 
 class Airbnb
 {
+    private $auth = null;
+    public function getAuth(): ?Auth { return $this->auth; }
+
+    private $register = null;
+    public function getRegister(): ?Register { return $this->register; }
+
     private $router = null;
     public function getRouter(): ?Router  { return $this->router; }
 
@@ -35,23 +51,66 @@ class Airbnb
     {
         session_start();
 
+        $this->loadAuth();
+        $this->loadRegister();
         $this->loadTwig();
         $this->loadRouter();
+    }
+
+    private function loadAuth(): void
+    {
+        $this->auth = new Auth();
+    }
+
+    private function loadRegister(): void
+    {
+        $this->register = new Register();
     }
 
     private function loadRouter(): void
     {
         $this->router = new Router();
 
-        $attr_visitor = [
+        $attr_renter = [
+            'namespace' => 'AirBnB\Http\Controller',
+            'middleware' => [ AuthMiddleware::class, RenterMiddleware::class ]
+        ];
+
+        $attr_subscriber = [
             'namespace' => 'AirBnB\Http\Controller'
         ];
 
-        $this->router
-            ->group( $attr_visitor, Routes::visitor() );
+        $attr_user = [
+            'namespace' => 'AirBnB\Http\Controller',
+            'middleware' => [ AuthMiddleware::class, UserMiddleware::class ]
+        ];
 
-        // TODO: Gérer erreur 404
-        $this->router->dispatch();
+        $attr_visitor = [
+            'namespace' => 'AirBnB\Http\Controller',
+            'middleware' => [ VisitorMiddleware::class ]
+        ];
+
+        $this->router
+            ->group( $attr_renter, Routes::renter() )
+            ->group( $attr_subscriber, Routes::subscriber() )
+            ->group( $attr_user, Routes::user() )
+            ->group( $attr_visitor, Routes::visitor() )
+
+        ;
+
+        try {
+            $this->router->dispatch();
+        }
+        catch( RouteNotFoundException $e ) {
+            $response = new HtmlResponse(URLUtils::get404(), 404);
+            $this->router->getPublisher()->publish($response);
+        }
+        /*
+        catch( Throwable $e ) {
+            $response = new HtmlResponse( 'Server Error.', 500 );
+            $this->router->getPublisher()->publish($response);
+        }
+        */
     }
 
     private function loadTwig(): void

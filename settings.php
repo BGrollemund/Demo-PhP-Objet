@@ -12,8 +12,8 @@ return [
     'db_name' => 'tp-airBnB',
 
     //hash
-    'salt' => '',
-    'pepper' => ''
+    'salt' => 'cca9bba1-324d-4ece-afe0-7378c7da84d2',
+    'pepper' => '5ba9ea04-854b-417e-9720-dd34ceef2289'
 ];
 
 

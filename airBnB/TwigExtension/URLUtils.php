@@ -35,4 +35,17 @@ class URLUtils extends AbstractExtension
 
         return $router->url( $name, $params );
     }
+
+    public static function get404(): string
+    {
+        // Lance le cache de sortie (output buffer)
+        // Après cette ligne PHP va écrire dans le cache au lieu
+        // d'écrire sur la page
+        ob_start();
+
+        include VIEW_PATH . 'errors' . DS . '404.php';
+
+        // vide le contenu du cache en sortie de la méthode
+        return ob_get_clean();
+    }
 }

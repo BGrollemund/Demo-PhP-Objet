@@ -1,5 +1,85 @@
 {% extends "layout.twig" %}
 
 {% block top_links %}
-    <a href="#" class="btn btn-success">Connexion</a>
+    <a href="{{ route('login') }}" class="btn btn-success">Connexion</a>
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="card">
+            <h2 class="p-3">Inscrivez vous :</h2>
+            <div class="card-body">
+                <form action="{{ route( 'register' ) }}" method="post">
+                    <label class="form-row">
+                        <span>Nom d'utilisateur</span>
+                        <input type="text" name="username" class="form-control {% if form_status.hasError('username') %} is-invalid{% endif %}"  value="{{ form_status.getValue( 'username' ) }}">
+                        {% if form_status.hasError( 'username' ) %}
+                            <br><span class="invalid-feedback">{{ form_status.getError( 'username' ) }}</span>
+                        {% endif %}
+                    </label>
+
+                    <label class="form-row">
+                        <span>Email</span>
+                        <input type="text" name="email" class="form-control {% if form_status.hasError('email') %} is-invalid{% endif %}"  value="{{ form_status.getValue( 'email' ) }}">
+                        {% if form_status.hasError( 'email' ) %}
+                            <br><span class="invalid-feedback">{{ form_status.getError( 'email' ) }}</span>
+                        {% endif %}
+                    </label>
+
+                    <label class="form-row">
+                        <span>Date de naissance</span>
+                        <input type="text" name="birth_date" class="form-control {% if form_status.hasError('birth_date') %} is-invalid{% endif %}" value="{{ form_status.getValue( 'birth_date' ) }}" placeholder="jj/mm/aaaa">
+                        {% if form_status.hasError( 'birth_date' ) %}
+                            <br><span class="invalid-feedback">{{ form_status.getError( 'birth_date' ) }}</span>
+                        {% endif %}
+                    </label>
+
+                    <label class="form-row">
+                        <span>Ville</span>
+                        <input type="text" name="city" class="form-control {% if form_status.hasError('city') %} is-invalid{% endif %}"  value="{{ form_status.getValue( 'city' ) }}">
+                        {% if form_status.hasError( 'city' ) %}
+                            <br><span class="invalid-feedback">{{ form_status.getError( 'city' ) }}</span>
+                        {% endif %}
+                    </label>
+
+                    <label class="form-row">
+                        <span>Pays</span>
+                        <input type="text" name="country" class="form-control {% if form_status.hasError('country') %} is-invalid{% endif %}" value="{{ form_status.getValue( 'country' ) }}">
+                        {% if form_status.hasError( 'country' ) %}
+                            <br><span class="invalid-feedback">{{ form_status.getError( 'country' ) }}</span>
+                        {% endif %}
+                    </label>
+
+                    <label>
+                        <div>
+                            <input type="radio" name="is_renter" value="user" checked="checked">
+                            <span class="pl-2">Je ne souhaite pas déposer des annonces</span>
+                        </div>
+                        <div>
+                            <input type="radio" name="is_renter" value="renter">
+                            <span class="pl-2">Je souhaite déposer des annonces</span>
+                        </div>
+                    </label>
+
+                    <label class="form-row">
+                        <span>Mot de passe</span>
+                        <input type="password" name="password" class="form-control {% if form_status.hasError('password') %} is-invalid{% endif %}" value="{{ form_status.getValue( 'password' ) }}">
+                        {% if form_status.hasError( 'password' ) %}
+                            <br><span class="invalid-feedback">{{ form_status.getError( 'password' ) }}</span>
+                        {% endif %}
+                    </label>
+
+                    <label class="form-row">
+                        <span>Confirmez votre mot de passe</span>
+                        <input type="password" name="password_check" class="form-control {% if form_status.hasError('password_check') %} is-invalid{% endif %}" value="{{ form_status.getValue( 'password_check' ) }}">
+                        {% if form_status.hasError( 'password_check' ) %}
+                            <br><span class="invalid-feedback">{{ form_status.getError( 'password_check' ) }}</span>
+                        {% endif %}
+                    </label>
+
+                    <input type="submit" value="S'inscrire" class="btn btn-success">
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
