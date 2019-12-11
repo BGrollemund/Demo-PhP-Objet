@@ -1,1 +1,54 @@
 {% extends "layout.twig" %}
+
+{%  block top_links %}
+    <a href="{{ route( 'logout' ) }}" class="btn btn-danger">Déconnexion</a>
+{%  endblock %}
+
+{% block user_menu %}
+    <a href="{{ route( 'rent-list' ) }}" class="btn btn-success mx-3">Liste des locations</a>
+    <a href="{{ route( 'rent-manager' ) }}" class="btn btn-success mx-3">Mes réservations</a>
+{%  endblock %}
+
+
+{% block renter_menu %}
+    <div class="{% if role_label is not same as('renter') %}d-none{% endif %}">
+        <a href="{{ route( 'my-rent-list' ) }}" class="btn btn-success mx-3">Liste de mes locations</a>
+        <a href="{{ route( 'my-rent-add' ) }}" class="btn btn-success mx-3">Ajouter une location</a>
+        <a href="{{ route( 'my-rent-manager' ) }}" class="btn btn-success mx-3">Réservations en cours</a>
+    </div>
+{%  endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="card w-100">
+            <ul class="list-unstyled">
+                {% for renting in rentings %}
+                    <div class="card m-3">
+                        <li class="d-flex card-body p-2">
+                            <ul class="list-unstyled">
+                                <li class=" p-1">
+                                    <em>{{ renting.renting_type_label }}</em>
+                                </li>
+                                <li class="p-1">
+                                    {{ renting.city }} ({{ renting.country }})
+                                </li>
+                                <li class="font-weight-bold p-3">
+                                    {{ renting.description }}
+                                </li>
+                                <li class="p-1">
+                                    {{ renting.sleeping_num }} couchage(s), {{ renting.area }} m²
+                                </li>
+                                <li class="font-weight-bold p-1">
+                                    {{ renting.price }} € par nuit
+                                </li>
+                            </ul>
+                        </li>
+                        <div class="align-self-end card-body p-2">
+                            <a href="{{ route( 'rent-detail', { 'id': renting.id } ) }}" class="btn btn-success mx-3">Voir le détail</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

@@ -33,9 +33,9 @@ class Auth
         if( empty( $email ) ) return self::ERROR_EMAIL_MISSING;
         if( empty( $password ) ) return self::ERROR_PASSWORD_MISSING;
 
-        $userRepo = RepositoryManager::manager()->userRepository();
+        $user_repo = RepositoryManager::manager()->userRepository();
 
-        $user = $userRepo->getByEmail( $email );
+        $user = $user_repo->getByEmail( $email );
 
         if( is_null( $user ) ) return self::ERROR_EMAIL_BAD;
 

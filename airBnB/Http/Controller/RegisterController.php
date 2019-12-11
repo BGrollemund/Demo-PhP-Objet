@@ -48,9 +48,17 @@ class RegisterController extends Controller
 
         // TODO: Validation de la saisie
 
-        $check_result = Airbnb::app()
-            ->getRegister()
-            ->checkRegister( $input_username, $input_email, $input_birth_date, $input_city, $input_country, $input_password, $input_password_check );
+        $check_result = Airbnb::app()->getRegister()->checkRegister( $post_data );
+
+        $redirect_route = 'home';
+
+        if( $check_result > 0 ) {
+            Session::set( Session::FORM_STATUS, null );
+
+            $redirect_route = AuthController::getRedirectRoute( $check_result );
+
+            return new RedirectResponse( $router->url( $redirect_route ) );
+        }
 
         // Gestion des erreurs du formulaire
         $form_status = new FormStatus();
@@ -60,8 +68,14 @@ class RegisterController extends Controller
             case Register::USERNAME_MISSING:
                 $form_status->addError( $username, 'Veuillez indiquer votre nom d\'utilisateur.' );
                 break;
+            case Register::USERNAME_EXIST:
+                $form_status->addError( $username, 'Ce nom d\'utilisateur est déjà utilisé.' );
+                break;
             case Register::EMAIL_MISSING:
                 $form_status->addError( $email, 'Veuillez indiquer votre adresse email.' );
+                break;
+            case Register::EMAIL_EXIST:
+                $form_status->addError( $email, 'Cet email est déjà utilisé.' );
                 break;
             case Register::BIRTH_DATE_MISSING:
                 $form_status->addError( $birth_date, 'Veuillez indiquer votre date de naissance.' );
@@ -116,40 +130,6 @@ class RegisterController extends Controller
 
         Session::set( Session::FORM_STATUS, $form_status );
 
-        $repo = RepositoryManager::manager();
-
-        $role_repo = $repo->roleRepository();
-        $role_id = $role_repo->getIdByLabel( $form_status->getValue('is_renter') );
-
-        if( $role_id === 0 ) {
-            // TODO: erreur role (pas normal), logger
-        }
-
-        $profile_repo = $repo->profileRepository();
-
-        $explode_birth_date = explode('/', $input_birth_date);
-        $reverse_birth_date = array_reverse( $explode_birth_date );
-        $new_birth_date = implode('/',$reverse_birth_date );
-
-        $post_data['birth_date'] =  $new_birth_date;
-        $profile_id = $profile_repo->insert( new Profile( $post_data ) );
-
-        if( $profile_id === 0 ) {
-            // TODO: erreur d'insertion
-        }
-
-       $user_repo = $repo->userRepository();
-
-       $post_data[ 'role_id' ] = $role_id;
-       $post_data[ 'profile_id' ] = $profile_id;
-       $post_data[ 'password' ] = Auth::hashData( $post_data[ 'password' ] );
-
-       $success = $user_repo->insert( new User( $post_data ) );
-
-        if( $success === 0 ) {
-            // TODO: erreur d'insertion
-        }
-
-        return new RedirectResponse( $router->url( 'home' ) );
+        return new RedirectResponse( $router->url( $redirect_route ) );
     }
 }

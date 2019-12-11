@@ -19,7 +19,7 @@ class RoleRepository extends Repository
 
         if( is_null( $stmt ) ) return null;
 
-        $role_data = $stmt->fetch();;
+        $role_data = $stmt->fetch();
 
         return $role_data ? new Role( $role_data ) : null;
     }

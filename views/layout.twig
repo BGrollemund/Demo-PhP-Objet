@@ -31,6 +31,11 @@
 {% endblock %}
 
 <main class="flex-grow-1 bg-light">
+    <div class="d-flex justify-content-between py-3 px-5 bg-secondary text-light">
+        {% block user_menu %}{% endblock %}
+        <div class="flex-grow-1"></div>
+        {% block renter_menu %}{% endblock %}
+    </div>
     <div class="container py-3">
         {% block content_header %}
             <h1>{{ title }}</h1>

@@ -11,6 +11,18 @@ class ProfileRepository extends Repository
 {
     protected function table(): string { return 'profiles'; }
 
+    public function getByUsername( string $username ): ?Profile
+    {
+        $query = 'SELECT * FROM '.$this->table().' WHERE username=:username ';
+
+        $stmt = $this->read( $query, [ 'username' => $username ] );
+
+        if( is_null($stmt) ) return null;
+
+        $user_data = $stmt->fetch();
+
+        return $user_data ? new Profile( $user_data ) : null;
+    }
 
     public function insert( Profile $profile ): int
     {

@@ -13,9 +13,9 @@ class UserRepository extends Repository
 
     public function getByEmail( string $email ): ?User
     {
-        $query = 'SELECT * FROM '.$this->table().' WHERE email = :email ';
+        $query = 'SELECT * FROM '.$this->table().' WHERE email=:email ';
 
-        $stmt = $this->read( $query, ['email' =>$email] );
+        $stmt = $this->read( $query, [ 'email' => $email ] );
 
         if( is_null($stmt) ) return null;
 

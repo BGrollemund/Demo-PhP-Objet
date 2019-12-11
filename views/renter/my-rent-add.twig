@@ -1,0 +1,83 @@
+{% extends "renter/my-rent-list.twig" %}
+
+{%  block content %}
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <form action="{{ route('my-rent-insert') }}" method="post">
+                <input type="hidden" name="renter_id" value="{{ renter_id }}">
+
+                <ul class="list-unstyled d-flex flex-wrap {% if form_status.hasError('renting_type_id') %} border border-danger{% endif %}">
+                    {% for renting_type in renting_types %}
+                        <li class="p-2">
+                            <input type="radio" name="renting_type_id" value="{{ renting_type.id }}">
+                            {{ renting_type.label }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% if form_status.hasError( 'renting_type_id' ) %}
+                    <span class="text-danger">{{ form_status.getError( 'renting_type_id' ) }}</span>
+                {% endif %}
+
+                <label class="form-row">
+                    <span>Description</span>
+                    <textarea name="description" class="form-control p-3 {% if form_status.hasError('description') %} is-invalid{% endif %}" rows="5">{{ form_status.getValue( 'description' ) }}</textarea>
+                    {% if form_status.hasError( 'description' ) %}
+                        <br><span class="invalid-feedback">{{ form_status.getError( 'description' ) }}</span>
+                    {% endif %}
+                </label>
+
+                <label class="form-row">
+                    <span>Ville</span>
+                    <input type="text" name="city" class="form-control p-3 {% if form_status.hasError('city') %} is-invalid{% endif %}" value="{{ form_status.getValue( 'city' ) }}">
+                    {% if form_status.hasError( 'city' ) %}
+                        <br><span class="invalid-feedback">{{ form_status.getError( 'city' ) }}</span>
+                    {% endif %}
+                </label>
+
+                <label class="form-row">
+                    <span>Pays</span>
+                    <input type="text" name="country" class="form-control p-3 {% if form_status.hasError('country') %} is-invalid{% endif %}" value="{{ form_status.getValue( 'country' ) }}">
+                    {% if form_status.hasError( 'country' ) %}
+                        <br><span class="invalid-feedback">{{ form_status.getError( 'country' ) }}</span>
+                    {% endif %}
+                </label>
+
+                <label class="form-row">
+                    <span>Prix par nuit en euros</span>
+                    <input type="text" name="price" class="form-control p-3 {% if form_status.hasError('price') %} is-invalid{% endif %}" value="{{ form_status.getValue( 'price' ) }}">
+                    {% if form_status.hasError( 'price' ) %}
+                        <br><span class="invalid-feedback">{{ form_status.getError( 'price' ) }}</span>
+                    {% endif %}
+                </label>
+
+                <label class="form-row">
+                    <span>Surface en m²</span>
+                    <input type="text" name="area" class="form-control p-3 {% if form_status.hasError('area') %} is-invalid{% endif %}" value="{{ form_status.getValue( 'area' ) }}">
+                    {% if form_status.hasError( 'area' ) %}
+                        <br><span class="invalid-feedback">{{ form_status.getError( 'area' ) }}</span>
+                    {% endif %}
+                </label>
+
+                <label class="form-row">
+                    <span>Nombre de couchages</span>
+                    <input type="text" name="sleeping_num" class="form-control p-3 {% if form_status.hasError('sleeping_num') %} is-invalid{% endif %}" value="{{ form_status.getValue( 'sleeping_num' ) }}">
+                    {% if form_status.hasError( 'sleeping_num' ) %}
+                        <br><span class="invalid-feedback">{{ form_status.getError( 'sleeping_num' ) }}</span>
+                    {% endif %}
+                </label>
+
+                <ul class="list-unstyled d-flex flex-wrap">
+                    {% for equipment in equipments %}
+                        <li class="p-2">
+                            <input type="checkbox" name="bound_equipments[]" value="{{ equipment.id }}">
+                            {{ equipment.label }}
+                        </li>
+                    {% endfor %}
+                </ul>
+                <input type="submit" class="btn btn-primary" value="Ajouter">
+            </form>
+        </div>
+    </div>
+
+{%  endblock %}

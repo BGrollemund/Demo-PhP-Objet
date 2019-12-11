@@ -41,7 +41,16 @@ abstract class Routes
         {
             $router
                 ->name('my-rent-list')
-                ->get('/mes-locations', 'RenterController@index')
+                ->get('/mes-annonces', 'RenterController@index')
+
+                ->name('my-rent-add')
+                ->get('/ajouter-annonce', 'RenterController@add')
+
+                ->name('my-rent-insert')
+                ->post('/ajouter-annonce', 'RenterController@insert', [])
+
+                ->name('my-rent-manager')
+                ->get('/gestion-annonces', 'RenterController@booked')
 
             ;
         };
@@ -63,9 +72,17 @@ abstract class Routes
         return function ( Router $router )
         {
             $router
+                ->name('rent-book')
+                ->post('/locations', 'UserController@book')
+
+                ->name('rent-detail')
+                ->get('/locations/{id}', 'UserController@show')
+
                 ->name('rent-list')
                 ->get('/locations', 'UserController@index')
 
+                ->name('rent-manager')
+                ->get('/mes-locations', 'UserController@booked')
             ;
         };
     }
