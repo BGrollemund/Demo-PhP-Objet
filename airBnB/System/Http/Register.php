@@ -13,7 +13,7 @@ use airBnB\System\Session\Session;
 class Register
 {
     public const USERNAME_MISSING = -1;
-    public const USERNAME_EXIST = -3;
+    public const USERNAME_EXIST = -2;
     public const EMAIL_MISSING = -3;
     public const EMAIL_EXIST = -4;
     public const BIRTH_DATE_MISSING = -5;
@@ -52,7 +52,6 @@ class Register
         $birth_date = 'birth_date';
         $city = 'city';
         $country = 'country';
-        $is_renter = 'is_renter';
 
         $repo = RepositoryManager::manager();
 
@@ -96,45 +95,7 @@ class Register
                 return self::PASSWORD_CHECK_BAD;
         }
 
-        // Insertion du nouvel utilisateur
-        // TODO: changer l'insertion en base dans le controller
-
-        $role_repo = $repo->roleRepository();
-        $role_id = $role_repo->getIdByLabel( $data[ $is_renter ] );
-
-        if( $role_id === 0 ) {
-            // TODO: erreur role (pas normal), logger
-        }
-
-        $explode_birth_date = explode('/', $data[ $birth_date ] );
-        $reverse_birth_date = array_reverse( $explode_birth_date );
-        $new_birth_date = implode('/', $reverse_birth_date );
-
-        $data[ $birth_date ] =  $new_birth_date;
-
-        $profile_id = $profile_repo->insert( new Profile( $data ) );
-
-        if( $profile_id === 0 ) {
-            // TODO: erreur d'insertion
-        }
-
-        $data[ 'role_id' ] = $role_id;
-        $data[ 'profile_id' ] = $profile_id;
-        $data[ $password ] = Auth::hashData( $data[ $password ] );
-
-        $success = $user_repo->insert( new User( $data ) );
-
-        if( $success === 0 ) {
-            // TODO: erreur d'insertion
-        }
-
-        $user = $user_repo->getByEmail( $data[ $email ] );
-
-        $user->password = null;
-
-        Session::set( Session::USER, $user );
-
-        return $user->role_id;
+        return 0;
     }
 
     public function checkBookingFields( array $data ): int
@@ -216,7 +177,7 @@ class Register
             return self::SLEEPING_NUM_MISSING;
         }
         else {
-            if( ! preg_match('/^\d{1,6}$/', $data[ $area ] ) )
+            if( ! preg_match('/^\d{1,6}$/', $data[ $sleeping_num ] ) )
                 return self::SLEEPING_NUM_BAD;
         }
 

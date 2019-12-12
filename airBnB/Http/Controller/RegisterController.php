@@ -19,7 +19,7 @@ use Zend\Diactoros\ServerRequest;
 
 class RegisterController extends Controller
 {
-    public function register( ServerRequest $request )
+    public function register( ServerRequest $request ): RedirectResponse
     {
         $post_data = $request->getParsedBody();
 
@@ -46,18 +46,52 @@ class RegisterController extends Controller
         if( is_null($input_email) || is_null($input_password) || is_null($input_password_check) || is_null($input_username) || is_null($input_birth_date) || is_null($input_city) || is_null($input_country)|| is_null($input_is_renter) )
             return new RedirectResponse( $router->url('home') );
 
-        // TODO: Validation de la saisie
-
+        // Validation de la saisie
         $check_result = Airbnb::app()->getRegister()->checkRegister( $post_data );
 
-        $redirect_route = 'home';
-
-        if( $check_result > 0 ) {
+        if( $check_result === 0 ) {
             Session::set( Session::FORM_STATUS, null );
 
-            $redirect_route = AuthController::getRedirectRoute( $check_result );
+            // Insertion dans la bdd
+            $repo = RepositoryManager::manager();
 
-            return new RedirectResponse( $router->url( $redirect_route ) );
+            $role_repo = $repo->roleRepository();
+            $role_id = $role_repo->getIdByLabel( $input_is_renter );
+
+            if( $role_id === 0 ) {
+                // TODO: erreur role (pas normal), logger
+            }
+
+            // TODO: fonction modif Date
+            $explode_birth_date = explode('/', $input_birth_date );
+            $reverse_birth_date = array_reverse( $explode_birth_date );
+            $new_birth_date = implode('/', $reverse_birth_date );
+
+            $post_data[ $birth_date ] =  $new_birth_date;
+
+            $profile_id = $repo->profileRepository()->insert( new Profile( $post_data ) );
+
+            if( $profile_id === 0 ) {
+                // TODO: erreur d'insertion
+            }
+
+            $post_data[ 'role_id' ] = $role_id;
+            $post_data[ 'profile_id' ] = $profile_id;
+            $post_data [ $password ] = Auth::hashData( $post_data[ $password ] );
+
+            $success = $repo->userRepository()->insert( new User( $post_data ) );
+
+            if( $success === 0 ) {
+                // TODO: erreur d'insertion
+            }
+
+            $user = $repo->userRepository()->getByEmail( $post_data[ $email ] );
+
+            $user->password = null;
+
+            Session::set( Session::USER, $user );
+
+            return new RedirectResponse( $router->url( 'my-rent-list' ) );
         }
 
         // Gestion des erreurs du formulaire
@@ -130,6 +164,6 @@ class RegisterController extends Controller
 
         Session::set( Session::FORM_STATUS, $form_status );
 
-        return new RedirectResponse( $router->url( $redirect_route ) );
+        return new RedirectResponse( $router->url( 'home' ) );
     }
 }
