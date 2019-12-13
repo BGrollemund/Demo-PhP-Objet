@@ -31,7 +31,17 @@ class FormStatus
         $this->values[ $name ] = $value;
     }
 
+    public function addArray( string $name, array $array ): void
+    {
+        $this->values[ $name ] = $array;
+    }
+
     public function getValue( string $name ): ?string
+    {
+        return $this->values[ $name ] ?? null;
+    }
+
+    public function getArray( string $name ): ?array
     {
         return $this->values[ $name ] ?? null;
     }

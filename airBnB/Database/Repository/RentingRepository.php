@@ -12,12 +12,12 @@ class RentingRepository extends Repository
 {
     protected function table(): string { return 'rentings'; }
 
-    public function bindEquipments( int $id_renting, array $equipment_ids ): bool
+    public function bindEquipments( int $renting_id, array $equipment_ids ): bool
     {
         $query_values = [];
 
         foreach( $equipment_ids as $equipment_id ) {
-            $query_values[] = sprintf( '(%s,%s)', $id_renting, $equipment_id );
+            $query_values[] = sprintf( '(%s,%s)', $renting_id, $equipment_id );
         }
 
 
@@ -29,7 +29,37 @@ class RentingRepository extends Repository
 
     }
 
-    public function getById( int $id ): ?Renting
+    public function unbindEquipments( int $renting_id, array $equipment_ids  ): bool
+    {
+        $query = sprintf( 'DELETE FROM equipment_renting WHERE renting_id=:renting_id AND equipment_id IN (%s)',
+            implode(',', $equipment_ids )
+        );
+
+        $id = $this->delete( $query, ['renting_id' => $renting_id ] );
+
+        return $id > 0;
+    }
+
+    public function findAll(): array
+    {
+        $query = 'SELECT * FROM '.$this->table().' ORDER BY id DESC';
+
+        $stmt = $this->read( $query );
+
+        if( is_null( $stmt ) )
+            return [];
+
+        $rentings = [];
+
+        while( $renting = $stmt->fetch() )
+        {
+            $rentings[] = new Renting( $renting );
+        }
+
+        return $rentings;
+    }
+
+    public function findById(int $id ): ?Renting
     {
         $query = 'SELECT * FROM ' . $this->table() . ' WHERE id=:id';
 
@@ -49,25 +79,6 @@ class RentingRepository extends Repository
         $stmt = $this->read( $query, [ 'renter_id' => $renter_id ]);
 
         if( is_null( $stmt ) ) return [];
-
-        $rentings = [];
-
-        while( $renting = $stmt->fetch() )
-        {
-            $rentings[] = new Renting( $renting );
-        }
-
-        return $rentings;
-    }
-
-    public function findAll(): array
-    {
-        $query = 'SELECT * FROM '.$this->table().' ORDER BY id DESC';
-
-        $stmt = $this->read( $query );
-
-        if( is_null( $stmt ) )
-            return [];
 
         $rentings = [];
 
@@ -109,6 +120,28 @@ class RentingRepository extends Repository
             ' renting_type_id=:renting_type_id, area=:area, description=:description, sleeping_num=:sleeping_num';
 
         $id = $this->create( $query, [
+            'renter_id' => $renting->renter_id,
+            'city' => $renting->city,
+            'country' => $renting->country,
+            'price' => (int) $renting->price,
+            'renting_type_id' => $renting->renting_type_id,
+            'area' => (int) $renting->area,
+            'description' => $renting->description,
+            'sleeping_num' => (int) $renting->sleeping_num
+        ]);
+
+        return $id;
+    }
+
+    public function save( Renting $renting ): int
+    {
+        $query = 'UPDATE '.$this->table().
+            ' SET renter_id=:renter_id, city=:city, country=:country, price=:price,'.
+            ' renting_type_id=:renting_type_id, area=:area, description=:description, sleeping_num=:sleeping_num'.
+            ' WHERE id=:id';
+
+        $id = $this->update( $query, [
+            'id' => $renting->id,
             'renter_id' => $renting->renter_id,
             'city' => $renting->city,
             'country' => $renting->country,

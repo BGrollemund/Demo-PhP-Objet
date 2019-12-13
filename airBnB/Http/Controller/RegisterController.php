@@ -14,6 +14,8 @@ use airBnB\System\Http\Register;
 use airBnB\System\Session\FormStatus;
 use airBnB\System\Session\Session;
 
+use airBnB\System\Util\DateManager;
+use airBnB\System\Util\FieldChecker;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Diactoros\ServerRequest;
 
@@ -47,7 +49,7 @@ class RegisterController extends Controller
             return new RedirectResponse( $router->url('home') );
 
         // Validation de la saisie
-        $check_result = Airbnb::app()->getRegister()->checkRegister( $post_data );
+        $check_result = FieldChecker::checkRegisterFields( $post_data );
 
         if( $check_result === 0 ) {
             Session::set( Session::FORM_STATUS, null );
@@ -56,16 +58,14 @@ class RegisterController extends Controller
             $repo = RepositoryManager::manager();
 
             $role_repo = $repo->roleRepository();
-            $role_id = $role_repo->getIdByLabel( $input_is_renter );
+            $role_id = $role_repo->findIdByLabel( $input_is_renter );
 
             if( $role_id === 0 ) {
                 // TODO: erreur role (pas normal), logger
             }
 
-            // TODO: fonction modif Date
-            $explode_birth_date = explode('/', $input_birth_date );
-            $reverse_birth_date = array_reverse( $explode_birth_date );
-            $new_birth_date = implode('/', $reverse_birth_date );
+            // Modif Date
+            $new_birth_date = DateManager::invertDateFormat( $input_birth_date, '/', '/'  );
 
             $post_data[ $birth_date ] =  $new_birth_date;
 
@@ -85,7 +85,7 @@ class RegisterController extends Controller
                 // TODO: erreur d'insertion
             }
 
-            $user = $repo->userRepository()->getByEmail( $post_data[ $email ] );
+            $user = $repo->userRepository()->findByEmail( $post_data[ $email ] );
 
             $user->password = null;
 
@@ -99,37 +99,37 @@ class RegisterController extends Controller
 
         // Erreurs
         switch( $check_result ) {
-            case Register::USERNAME_MISSING:
+            case FieldChecker::USERNAME_MISSING:
                 $form_status->addError( $username, 'Veuillez indiquer votre nom d\'utilisateur.' );
                 break;
-            case Register::USERNAME_EXIST:
+            case FieldChecker::USERNAME_EXIST:
                 $form_status->addError( $username, 'Ce nom d\'utilisateur est déjà utilisé.' );
                 break;
-            case Register::EMAIL_MISSING:
+            case FieldChecker::EMAIL_MISSING:
                 $form_status->addError( $email, 'Veuillez indiquer votre adresse email.' );
                 break;
-            case Register::EMAIL_EXIST:
+            case FieldChecker::EMAIL_EXIST:
                 $form_status->addError( $email, 'Cet email est déjà utilisé.' );
                 break;
-            case Register::BIRTH_DATE_MISSING:
+            case FieldChecker::BIRTH_DATE_MISSING:
                 $form_status->addError( $birth_date, 'Veuillez indiquer votre date de naissance.' );
                 break;
-            case Register::BIRTH_DATE_BAD:
+            case FieldChecker::BIRTH_DATE_BAD:
                 $form_status->addError( $birth_date, 'Veuillez respecter le format jj/mm/aaa.' );
                 break;
-            case Register::CITY_MISSING:
+            case FieldChecker::CITY_MISSING:
                 $form_status->addError( $city, 'Veuillez indiquer votre ville.' );
                 break;
-            case Register::COUNTRY_MISSING:
+            case FieldChecker::COUNTRY_MISSING:
                 $form_status->addError( $country, 'Veuillez indiquer votre pays.' );
                 break;
-            case Register::PASSWORD_MISSING:
+            case FieldChecker::PASSWORD_MISSING:
                 $form_status->addError( $password, 'Veuillez choisir votre mot de passe.' );
                 break;
-            case Register::PASSWORD_CHECK_MISSING:
+            case FieldChecker::PASSWORD_CHECK_MISSING:
                 $form_status->addError( $password_check, 'Veuillez retaper votre mot de passe.' );
                 break;
-            case Register::PASSWORD_CHECK_BAD:
+            case FieldChecker::PASSWORD_CHECK_BAD:
                 $form_status->addError( $password_check, 'Veuillez taper le même mot de passe.' );
                 break;
 

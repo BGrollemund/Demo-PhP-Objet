@@ -11,7 +11,7 @@ class UserRepository extends Repository
 {
     protected function table(): string { return 'users'; }
 
-    public function getByEmail( string $email ): ?User
+    public function findByEmail(string $email ): ?User
     {
         $query = 'SELECT * FROM '.$this->table().' WHERE email=:email ';
 
@@ -37,5 +37,4 @@ class UserRepository extends Repository
 
         return $id;
     }
-
 }

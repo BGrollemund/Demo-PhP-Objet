@@ -35,7 +35,7 @@ class Auth
 
         $user_repo = RepositoryManager::manager()->userRepository();
 
-        $user = $user_repo->getByEmail( $email );
+        $user = $user_repo->findByEmail( $email );
 
         if( is_null( $user ) ) return self::ERROR_EMAIL_BAD;
 

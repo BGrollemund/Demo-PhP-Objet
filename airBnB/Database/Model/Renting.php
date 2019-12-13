@@ -21,8 +21,8 @@ class Renting extends Model
     public function toArray(): array
     {
         return [
-            'renter_id' => $this->renter_id,
             'id' => $this->id,
+            'renter_id' => $this->renter_id,
             'city' => $this->city,
             'country' => $this->country,
             'price' => $this->price,

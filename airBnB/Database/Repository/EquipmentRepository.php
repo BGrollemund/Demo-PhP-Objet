@@ -29,4 +29,32 @@ class EquipmentRepository extends Repository
 
         return $equipments;
     }
+
+    public function findByRentingId( int $renting_id ): array
+    {
+        $equipment_renting = 'equipment_renting';
+
+        $query = sprintf(
+            'SELECT main.*
+						FROM %s as main 
+						JOIN %s as rel ON rel.equipment_id=main.id
+					WHERE rel.renting_id=:renting_id
+					ORDER BY main.label',
+            $this->table(),
+            $equipment_renting
+        );
+
+        $stmt = $this->read( $query, [ 'renting_id' => $renting_id ] );
+
+        if( is_null( $stmt ) ) { return []; }
+
+        $equipments = [];
+
+        while( $equipment_data = $stmt->fetch() )
+        {
+            $equipments[] = new Equipment( $equipment_data );
+        }
+
+        return $equipments;
+    }
 }

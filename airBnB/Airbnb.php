@@ -11,6 +11,7 @@ use airBnB\Http\Middleware\VisitorMiddleware;
 use airBnB\Http\Routes;
 use airBnB\System\Http\Auth;
 use airBnB\System\Http\Register;
+use airBnB\System\Util\FieldChecker;
 use airBnB\TwigExtension\HTMLUtils;
 use airBnB\TwigExtension\URLUtils;
 
@@ -27,9 +28,6 @@ class Airbnb
 {
     private $auth = null;
     public function getAuth(): ?Auth { return $this->auth; }
-
-    private $register = null;
-    public function getRegister(): ?Register { return $this->register; }
 
     private $router = null;
     public function getRouter(): ?Router  { return $this->router; }
@@ -52,7 +50,6 @@ class Airbnb
         session_start();
 
         $this->loadAuth();
-        $this->loadRegister();
         $this->loadTwig();
         $this->loadRouter();
     }
@@ -60,11 +57,6 @@ class Airbnb
     private function loadAuth(): void
     {
         $this->auth = new Auth();
-    }
-
-    private function loadRegister(): void
-    {
-        $this->register = new Register();
     }
 
     private function loadRouter(): void

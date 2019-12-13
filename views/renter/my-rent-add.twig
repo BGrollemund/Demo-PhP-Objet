@@ -1,7 +1,6 @@
 {% extends "renter/my-rent-list.twig" %}
 
 {%  block content %}
-
     <div class="card mb-3">
         <div class="card-body">
             <form action="{{ route('my-rent-insert') }}" method="post">
@@ -10,8 +9,10 @@
                 <ul class="list-unstyled d-flex flex-wrap {% if form_status.hasError('renting_type_id') %} border border-danger{% endif %}">
                     {% for renting_type in renting_types %}
                         <li class="p-2">
-                            <input type="radio" name="renting_type_id" value="{{ renting_type.id }}">
-                            {{ renting_type.label }}
+                            <label>
+                                <input type="radio" name="renting_type_id" value="{{ renting_type.id }}" {% if form_status.getValue('renting_type_id') is same as( renting_type.id ) %} checked="checked"{% endif %}>
+                                {{ renting_type.label }}
+                            </label>
                         </li>
                     {% endfor %}
                 </ul>
@@ -79,5 +80,4 @@
             </form>
         </div>
     </div>
-
 {%  endblock %}

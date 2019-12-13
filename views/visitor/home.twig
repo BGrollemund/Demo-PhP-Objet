@@ -52,11 +52,11 @@
 
                     <label>
                         <div>
-                            <input type="radio" name="is_renter" value="user" checked="checked">
+                            <input type="radio" name="is_renter" value="user" {% if form_status.getValue('is_renter') is same as( 'user' ) %} checked="checked"{% endif %} {% if form_status.getValue('is_renter') is null %} checked="checked"{% endif %}>
                             <span class="pl-2">Je ne souhaite pas déposer des annonces</span>
                         </div>
                         <div>
-                            <input type="radio" name="is_renter" value="renter">
+                            <input type="radio" name="is_renter" value="renter" {% if form_status.getValue('is_renter') is same as( 'renter' ) %} checked="checked"{% endif %}>
                             <span class="pl-2">Je souhaite déposer des annonces</span>
                         </div>
                     </label>

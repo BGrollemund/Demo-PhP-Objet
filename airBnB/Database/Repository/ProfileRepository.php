@@ -11,7 +11,7 @@ class ProfileRepository extends Repository
 {
     protected function table(): string { return 'profiles'; }
 
-    public function getByUsername( string $username ): ?Profile
+    public function findByUsername(string $username ): ?Profile
     {
         $query = 'SELECT * FROM '.$this->table().' WHERE username=:username ';
 

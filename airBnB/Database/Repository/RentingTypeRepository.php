@@ -10,19 +10,6 @@ class RentingTypeRepository extends Repository
 {
     protected function table(): string { return 'renting_types'; }
 
-    public function getLabelById( int $id ): string
-    {
-        $query = 'SELECT * FROM '.$this->table().' WHERE id=:id ';
-
-        $stmt = $this->read( $query, [ 'id' => $id ] );
-
-        if( is_null( $stmt ) ) return '';
-
-        $data = $stmt->fetch();
-
-        return $data ? $data[ 'label' ] : '';
-    }
-
     public function findAll(): array
     {
         $query = 'SELECT * FROM '.$this->table();
@@ -40,5 +27,18 @@ class RentingTypeRepository extends Repository
         }
 
         return $renting_types;
+    }
+
+    public function findLabelById( int $id ): string
+    {
+        $query = 'SELECT * FROM '.$this->table().' WHERE id=:id ';
+
+        $stmt = $this->read( $query, [ 'id' => $id ] );
+
+        if( is_null( $stmt ) ) return '';
+
+        $data = $stmt->fetch();
+
+        return $data ? $data[ 'label' ] : '';
     }
 }

@@ -31,6 +31,5 @@ class HTMLUtils extends AbstractExtension
     public function getSiteFullName(): string
     {
         return Settings::instance()->get('site_full_name');
-
     }
 }

@@ -7,6 +7,7 @@ namespace airBnB\System\Session;
 abstract class Session
 {
     public const USER = 'user';
+    public const RENTING_ID = 'renting_id';
     public const FORM_STATUS = 'form_status';
 
     public static function get( string $session_name )

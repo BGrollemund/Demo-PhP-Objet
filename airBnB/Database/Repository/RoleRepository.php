@@ -11,7 +11,7 @@ class RoleRepository extends Repository
 {
     protected function table(): string { return 'roles'; }
 
-    public function getById( int $id ): ?Role
+    public function findById(int $id ): ?Role
     {
         $query = 'SELECT * FROM '.$this->table().' WHERE id=:role_id ';
 
@@ -24,7 +24,7 @@ class RoleRepository extends Repository
         return $role_data ? new Role( $role_data ) : null;
     }
 
-    public function getIdByLabel( string $label ): int
+    public function findIdByLabel(string $label ): int
     {
         $query = 'SELECT * FROM '.$this->table().' WHERE label=:label ';
 

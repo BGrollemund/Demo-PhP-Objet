@@ -23,13 +23,13 @@ abstract class Routes
                 ->get('/', 'PageController@index')
 
                 ->name( 'register' )
-                ->post( '/register', 'RegisterController@register', [])
+                ->post( '/register', 'RegisterController@register')
 
                 ->name('login')
                 ->get('/connexion', 'AuthController@index')
 
                 ->name('auth')
-                ->post('/auth', 'AuthController@auth', [])
+                ->post('/auth', 'AuthController@auth')
 
             ;
         };
@@ -47,7 +47,16 @@ abstract class Routes
                 ->get('/ajouter-annonce', 'RenterController@add')
 
                 ->name('my-rent-insert')
-                ->post('/ajouter-annonce', 'RenterController@insert', [])
+                ->post('/ajouter-annonce', 'RenterController@insert')
+
+                ->name('my-rent-edit')
+                ->get('/modifier-annonce', 'RenterController@edit')
+
+                ->name('my-rent-edit')
+                ->post('/modifier-annonce', 'RenterController@edit')
+
+                ->name('my-rent-update')
+                ->post('/modification-annonce', 'RenterController@update')
 
                 ->name('my-rent-manager')
                 ->get('/gestion-annonces', 'RenterController@booked')

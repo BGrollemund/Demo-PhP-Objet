@@ -1,1 +1,7 @@
 {% extends "user/rent-manager.twig" %}
+
+{% block renter_menu %}
+    <a href="{{ route( 'my-rent-list' ) }}" class="btn btn-success mx-3">Liste de mes locations</a>
+    <a href="{{ route( 'my-rent-add' ) }}" class="btn btn-success mx-3">Ajouter une location</a>
+    <a href="{{ route( 'my-rent-manager' ) }}" class="btn btn-success mx-3">Réservations en cours</a>
+{%  endblock %}
