@@ -3,7 +3,7 @@
 {%  block content %}
     <div class="card mb-3">
         <div class="card-body">
-            <form action="{{ route('my-rent-insert') }}" method="post">
+            <form action="{{ route('my-rent-insert') }}" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="renter_id" value="{{ renter_id }}">
 
                 <ul class="list-unstyled d-flex flex-wrap {% if form_status.hasError('renting_type_id') %} border border-danger{% endif %}">
@@ -76,7 +76,11 @@
                         </li>
                     {% endfor %}
                 </ul>
-                <input type="submit" class="btn btn-primary" value="Ajouter">
+
+
+                <input type="file" name="medium" class="d-block mt-1 mb-3">
+
+                <input type="submit" class="btn btn-primary mt-3" value="Ajouter">
             </form>
         </div>
     </div>

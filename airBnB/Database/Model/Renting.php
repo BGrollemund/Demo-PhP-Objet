@@ -13,7 +13,6 @@ class Renting extends Model
     public $country;
     public $price;
     public $renting_type_id;
-    public $renting_type_label;
     public $area;
     public $description;
     public $sleeping_num;

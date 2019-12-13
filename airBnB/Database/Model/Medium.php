@@ -10,6 +10,7 @@ class Medium extends Model
 {
     public $medium_type_id;
     public $filename;
+    public $filepath;
     public $caption;
     public $create_at;
 
@@ -19,6 +20,7 @@ class Medium extends Model
             'id' => $this->id,
             'medium_type_id' => $this->medium_type_id,
             'filename' => $this->filename,
+            'filepath' => $this->filepath,
             'caption' => $this->caption
         ];
     }

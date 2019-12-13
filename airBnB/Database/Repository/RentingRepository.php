@@ -4,7 +4,7 @@
 namespace airBnB\Database\Repository;
 
 
-use airBnB\Database\Model\Equipment;
+use airBnB\Database\Model\Medium;
 use airBnB\Database\Model\Renting;
 use airBnB\System\Database\Repository;
 
@@ -19,7 +19,6 @@ class RentingRepository extends Repository
         foreach( $equipment_ids as $equipment_id ) {
             $query_values[] = sprintf( '(%s,%s)', $renting_id, $equipment_id );
         }
-
 
         $query = sprintf( 'INSERT INTO equipment_renting VALUES %s', implode(',', $query_values ) );
 
@@ -36,6 +35,15 @@ class RentingRepository extends Repository
         );
 
         $id = $this->delete( $query, ['renting_id' => $renting_id ] );
+
+        return $id > 0;
+    }
+
+    public function bindMedia( int $renting_id, int $medium_id ): bool
+    {
+        $query = 'INSERT INTO medium_renting VALUES (' . $renting_id . ',' . $medium_id . ')';
+
+        $id = $this->create( $query );
 
         return $id > 0;
     }
@@ -111,6 +119,21 @@ class RentingRepository extends Repository
         }
 
         return $equipment_labels;
+    }
+
+    public function findMediumById( int $id ): ?Medium
+    {
+        $medium_renting = 'medium_renting';
+
+        $query = 'SELECT media.* FROM '.$medium_renting.
+            ' JOIN media ON media.id='.$medium_renting.'.medium_id'.
+            ' WHERE renting_id='.$id;
+
+        $stmt = $this->read( $query );
+
+        $data = $stmt->fetch();
+
+        return $data ? new Medium( $data ) : null;
     }
 
     public function insert( Renting $renting ): int

@@ -5,6 +5,7 @@ namespace airBnB\Http\Controller;
 
 
 use airbnb\Airbnb;
+use airBnB\Database\Model\Medium;
 use airBnB\Database\Model\Renting;
 use airBnB\Database\Repository\RepositoryManager;
 use airBnB\System\Http\Controller;
@@ -14,6 +15,7 @@ use airBnB\System\Session\FormStatus;
 use airBnB\System\Session\Session;
 use airBnB\System\Util\DateManager;
 use airBnB\System\Util\FieldChecker;
+use Psr\Http\Message\UploadedFileInterface;
 use Zend\Diactoros\Response\RedirectResponse;
 use Zend\Diactoros\ServerRequest;
 
@@ -100,6 +102,15 @@ class RenterController extends Controller
 
         foreach( $rentings_data as $renting_data ) {
             $renting_data->renting_type_label = $renting_type_repo->findLabelById( $renting_data->renting_type_id );
+
+            $medium_infos = $renting_repo->findMediumById( $renting_data->id );
+
+            if( ! is_null( $medium_infos ) ) {
+                $renting_data->medium_bind = 'img'.DS.'users'.DS.$renting_data->renter_id.DS.$medium_infos->filename;
+            }
+            else {
+                $renting_data->medium_bind = null;
+            }
         }
 
         echo $this->twig->render( 'renter/my-rent-list.twig', [
@@ -124,6 +135,7 @@ class RenterController extends Controller
         $description = 'description';
         $sleeping_num = 'sleeping_num';
         $bound_equipments = 'bound_equipments';
+        $medium = 'medium';
 
         $input_city = $post_data[ $city ] ?? null;
         $input_country = $post_data[ $country ] ?? null;
@@ -137,7 +149,9 @@ class RenterController extends Controller
         $router = Airbnb::app()->getRouter();
 
         // TODO: manque un champ, logger
-        if( is_null($input_city) || is_null($input_country) || is_null($input_price) || is_null($renting_type_id) || is_null($input_area) || is_null($input_description) || is_null($input_sleeping_num) )
+        if( is_null($input_city) || is_null($input_country) || is_null($input_price) || is_null($renting_type_id) )
+            return new RedirectResponse( $router->url('home') );
+        if( is_null($input_area) || is_null($input_description) || is_null($input_sleeping_num) )
             return new RedirectResponse( $router->url('home') );
 
         // Validation de la saisie
@@ -159,6 +173,54 @@ class RenterController extends Controller
 
             if( $equipment_success === 0 ) {
                 // TODO: erreur d'insertion
+            }
+
+            // Gestion si image chargée
+            $uploaded_files = $request->getUploadedFiles();
+            $medium_file = $uploaded_files[ $medium ] ?? null;
+
+            if( ! is_null( $medium_file ) && $medium_file instanceof UploadedFileInterface ) {
+                $file_name_explode = explode('.', $medium_file->getClientFilename() );
+                $file_extension = $file_name_explode[ count( $file_name_explode ) - 1 ];
+
+                // TODO: tester l'extension du fichier et son type MIME 'clientMediaType'
+
+                $user_id = Session::get( Session::USER )->id;
+                $file_name = $user_id.'_'.microtime().'.'.$file_extension;
+                $file_path = ROOT_PATH.'assets'.DS.'img'.DS.'users'.DS.$user_id;
+
+                $dir_success = is_readable( $file_path );
+
+                if( ! $dir_success ) {
+                    $dir_success = mkdir($file_path);
+                }
+
+                if( $dir_success ) {
+                    $medium_file->moveTo( $file_path.DS.$file_name );
+
+                    // Insertion de l'image dans la bdd
+                    $medium_data = [
+                        'medium_type_id' => 1,
+                        'filename' => $file_name,
+                        'filepath' => $file_path,
+                        'caption' => ''
+                    ];
+
+                    $medium_repo = RepositoryManager::manager()->mediumRepository();
+
+                    $medium_success = $medium_repo->insert( new Medium( $medium_data ) );
+
+                    if( $medium_success === 0 ) {
+                        // TODO: erreur d'insertion
+                    }
+
+                    // Insertion dans la table de laison medium_renting
+                    $medium_bind_success = $renting_repo->bindMedia( $renting_success, $medium_success );
+
+                    if( $medium_bind_success === 0 ) {
+                        // TODO: erreur d'insertion
+                    }
+                }
             }
 
             return new RedirectResponse( $router->url( 'my-rent-list' ) );

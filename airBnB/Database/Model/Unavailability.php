@@ -6,7 +6,7 @@ namespace airBnB\Database\Model;
 
 use airBnB\System\Database\Model;
 
-class Availability extends Model
+class Unavailability extends Model
 {
     public $renting_id;
     public $start_date;

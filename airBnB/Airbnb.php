@@ -10,8 +10,6 @@ use airBnB\Http\Middleware\UserMiddleware;
 use airBnB\Http\Middleware\VisitorMiddleware;
 use airBnB\Http\Routes;
 use airBnB\System\Http\Auth;
-use airBnB\System\Http\Register;
-use airBnB\System\Util\FieldChecker;
 use airBnB\TwigExtension\HTMLUtils;
 use airBnB\TwigExtension\URLUtils;
 

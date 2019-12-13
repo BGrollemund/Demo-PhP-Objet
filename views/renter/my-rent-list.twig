@@ -12,30 +12,41 @@
             <ul class="list-unstyled">
                 {% for renting in rentings %}
                     <div class="card m-3">
-                        <li class="d-flex card-body p-2">
-                            <ul class="list-unstyled">
-                                <li class=" p-1">
-                                    <em>{{ renting.renting_type_label }}</em>
+                        <div class="card-body d-flex">
+                            <div class="card m-3 w-25">
+                                <div class="card-body d-flex justify-content-center align-items-center">
+                                    {% if renting.medium_bind is not null %}
+                                        <img src="{{ asset(renting.medium_bind) }}" alt="">
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card m-3 w-75">
+                                <li class="d-flex card-body p-2">
+                                    <ul class="list-unstyled">
+                                        <li class=" p-1">
+                                            <em>{{ renting.renting_type_label }}</em>
+                                        </li>
+                                        <li class="p-1">
+                                            {{ renting.city }} ({{ renting.country }})
+                                        </li>
+                                        <li class="font-weight-bold p-3">
+                                            {{ renting.description }}
+                                        </li>
+                                        <li class="p-1">
+                                            {{ renting.sleeping_num }} couchage(s), {{ renting.area }} m²
+                                        </li>
+                                        <li class="font-weight-bold p-1">
+                                            {{ renting.price }} € par nuit
+                                        </li>
+                                    </ul>
                                 </li>
-                                <li class="p-1">
-                                    {{ renting.city }} ({{ renting.country }})
-                                </li>
-                                <li class="font-weight-bold p-3">
-                                    {{ renting.description }}
-                                </li>
-                                <li class="p-1">
-                                    {{ renting.sleeping_num }} couchage(s), {{ renting.area }} m²
-                                </li>
-                                <li class="font-weight-bold p-1">
-                                    {{ renting.price }} € par nuit
-                                </li>
-                            </ul>
-                        </li>
-                        <div class="align-self-end card-body p-2">
-                            <form action="{{ route( 'my-rent-edit' ) }}" method="post">
-                                <input type="hidden" name="renting_id" value="{{ renting.id }}">
-                                <input type="submit" class="btn btn-success mx-3" value="Modifier">
-                            </form>
+                                <div class="align-self-end card-body p-2">
+                                    <form action="{{ route( 'my-rent-edit' ) }}" method="post">
+                                        <input type="hidden" name="renting_id" value="{{ renting.id }}">
+                                        <input type="submit" class="btn btn-success mx-3" value="Modifier">
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}

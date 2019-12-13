@@ -4,62 +4,71 @@
     <div class="d-flex justify-content-center">
         <div class="card w-100">
             <ul class="list-unstyled">
-                <div class="card m-5">
-                    <li class="d-flex card-body m-5 p-2">
-                        <ul class="d-flex flex-column list-unstyled">
-                            <li class="p-1">
-                                <em>{{ renting.renting_type_label }}</em>
-                            </li>
-                            <li class="p-1">
-                                {{ renting.city }} ({{ renting.country }})
-                            </li>
-                            <li class="font-weight-bold p-3">
-                                {{ renting.description }}
-                            </li>
-                            <li class="p-1">
-                                {{ renting.sleeping_num }} couchage(s), {{ renting.area }} m²
-                            </li>
-                            <li class="font-weight-bold p-1">
-                                {{ renting.price }} € par nuit
-                            </li>
-                            {% if equipments is not empty %}
-                                <li class="mt-4 p-1">
-                                    <u>Equipements disponibles:</u>
-                                    <ul class="d-flex list-unstyled">
-                                        {% for equipment in equipments %}
-                                            <li class="p-2">
-                                                {{ equipment }}
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
+                <div class="card-body d-flex">
+                    <div class="card m-3 w-75">
+                        <li class="d-flex card-body m-5 p-2">
+                            <ul class="d-flex flex-column list-unstyled">
+                                <li class="p-1">
+                                    <em>{{ renting.renting_type_label }}</em>
                                 </li>
+                                <li class="p-1">
+                                    {{ renting.city }} ({{ renting.country }})
+                                </li>
+                                <li class="font-weight-bold p-3">
+                                    {{ renting.description }}
+                                </li>
+                                <li class="p-1">
+                                    {{ renting.sleeping_num }} couchage(s), {{ renting.area }} m²
+                                </li>
+                                <li class="font-weight-bold p-1">
+                                    {{ renting.price }} € par nuit
+                                </li>
+                                {% if equipments is not empty %}
+                                    <li class="mt-4 p-1">
+                                        <u>Equipements disponibles:</u>
+                                        <ul class="d-flex list-unstyled">
+                                            {% for equipment in equipments %}
+                                                <li class="p-2">
+                                                    {{ equipment }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </li>
+                                {% endif %}
+                                <div class="card-body mt-5 p-2">
+                                    <form action="{{ route( 'rent-book' ) }}" method="post">
+                                        <input type="hidden" name="renting_id" value="{{ renting.id }}">
+                                        <input type="hidden" name="user_id" value="{{ user_id }}">
+
+                                        <label class="form-row">
+                                            <span class="mx-2">Réservé du :</span>
+                                            <input type="text" name="start_date" class="form-control {% if form_status.hasError('start_date') %} is-invalid{% endif %} mt-2"  value="{{ form_status.getValue( 'start_date' ) }}" placeholder="jj/mm/aaaa">
+                                            {% if form_status.hasError( 'start_date' ) %}
+                                                <br><span class="invalid-feedback">{{ form_status.getError( 'start_date' ) }}</span>
+                                            {% endif %}
+                                        </label>
+
+                                        <label class="form-row">
+                                            <span class="mx-2">au :</span>
+                                            <input type="text" name="end_date" class="form-control {% if form_status.hasError('end_date') %} is-invalid{% endif %} mt-2"  value="{{ form_status.getValue( 'end_date' ) }}" placeholder="jj/mm/aaaa">
+                                            {% if form_status.hasError( 'end_date' ) %}
+                                                <br><span class="invalid-feedback">{{ form_status.getError( 'end_date' ) }}</span>
+                                            {% endif %}
+                                        </label>
+
+                                        <input type="submit" class="btn btn-success mt-3 mx-5" value="Réserver">
+                                    </form>
+                                </div>
+                            </ul>
+                        </li>
+                    </div>
+                    <div class="card m-3 h-25 w-25">
+                        <div class="card-body d-flex justify-content-center align-items-center">
+                            {% if renting.medium_bind is not null %}
+                                <img src="{{ asset(renting.medium_bind) }}" alt="">
                             {% endif %}
-                            <div class="card-body mt-5 p-2">
-                                <form action="{{ route( 'rent-book' ) }}" method="post">
-                                    <input type="hidden" name="renting_id" value="{{ renting.id }}">
-                                    <input type="hidden" name="user_id" value="{{ user_id }}">
-
-                                    <label class="form-row">
-                                        <span class="mx-2">Réservé du :</span>
-                                        <input type="text" name="start_date" class="form-control {% if form_status.hasError('start_date') %} is-invalid{% endif %} mt-2"  value="{{ form_status.getValue( 'start_date' ) }}" placeholder="jj/mm/aaaa">
-                                        {% if form_status.hasError( 'start_date' ) %}
-                                            <br><span class="invalid-feedback">{{ form_status.getError( 'start_date' ) }}</span>
-                                        {% endif %}
-                                    </label>
-
-                                    <label class="form-row">
-                                        <span class="mx-2">au :</span>
-                                        <input type="text" name="end_date" class="form-control {% if form_status.hasError('end_date') %} is-invalid{% endif %} mt-2"  value="{{ form_status.getValue( 'end_date' ) }}" placeholder="jj/mm/aaaa">
-                                        {% if form_status.hasError( 'end_date' ) %}
-                                            <br><span class="invalid-feedback">{{ form_status.getError( 'end_date' ) }}</span>
-                                        {% endif %}
-                                    </label>
-
-                                    <input type="submit" class="btn btn-success mt-3 mx-5" value="Réserver">
-                                </form>
-                            </div>
-                        </ul>
-                    </li>
+                        </div>
+                    </div>
                 </div>
             </ul>
         </div>

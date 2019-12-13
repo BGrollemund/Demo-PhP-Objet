@@ -53,13 +53,24 @@ class UserController extends Controller
         $renting_type_repo = RepositoryManager::manager()->rentingTypeRepository();
         $role_repo = RepositoryManager::manager()->roleRepository();
 
-        foreach( $renting_repo->findAll() as $renting_data ) {
+        $rentings_data = $renting_repo->findAll();
+
+        foreach( $rentings_data as $renting_data ) {
             $renting_data->renting_type_label = $renting_type_repo->findLabelById( $renting_data->renting_type_id );
+
+            $medium_infos = $renting_repo->findMediumById( $renting_data->id );
+
+            if( ! is_null( $medium_infos ) ) {
+                $renting_data->medium_bind = 'img'.DS.'users'.DS.$renting_data->renter_id.DS.$medium_infos->filename;
+            }
+            else {
+                $renting_data->medium_bind = null;
+            }
         }
 
         echo $this->twig->render( 'user/rent-list.twig', [
             'title' => 'Liste des locations',
-            'rentings' => $renting_repo->findAll(),
+            'rentings' => $rentings_data,
             'role_label' => $role_repo->findById( Session::get( Session::USER )->role_id )->label
         ]);
     }
@@ -72,6 +83,15 @@ class UserController extends Controller
 
         $renting_data = $renting_repo->findById( $id );
         $renting_data->renting_type_label = $renting_type_repo->findLabelById( $renting_data->renting_type_id );
+
+        $medium_infos = $renting_repo->findMediumById( $renting_data->id );
+
+        if( ! is_null( $medium_infos ) ) {
+            $renting_data->medium_bind = 'img'.DS.'users'.DS.$renting_data->renter_id.DS.$medium_infos->filename;
+        }
+        else {
+            $renting_data->medium_bind = null;
+        }
 
         echo $this->twig->render( 'user/rent-detail.twig', [
             'title' => 'Détails de la location',

@@ -29,6 +29,9 @@ class URLUtils extends AbstractExtension
         );
     }
 
+    public function getImageUrl( $value ): string
+    {}
+
     public function getRouteUrl( string $name, array $params = [] ): string
     {
         $router = Airbnb::app()->getRouter();
@@ -43,7 +46,7 @@ class URLUtils extends AbstractExtension
         // d'écrire sur la page
         ob_start();
 
-        include VIEW_PATH . 'errors' . DS . '404.php';
+        include ROOT_PATH . 'views' . DS . 'errors' . DS . '404.php';
 
         // vide le contenu du cache en sortie de la méthode
         return ob_get_clean();
