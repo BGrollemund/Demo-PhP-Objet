@@ -4,35 +4,56 @@
     <div class="d-flex justify-content-center">
         <div class="card w-100">
             <ul class="list-unstyled">
-                {% for booking in bookings %}
-                    <div class="card m-3">
-                        <li class="font-weight-bolder  card-body p-2">
-                            <h5 class="text-primary">Location confirmé du {{ booking.start_date }} au {{ booking.end_date }}</h5>
-                        </li>
-                        <li class="d-flex card-body p-2">
-                            <ul class="list-unstyled">
-                                <li class=" p-1">
-                                    <em>{{ booking.renting_type_label }}</em>
-                                </li>
-                                <li class="p-1">
-                                    {{ booking.city }} ({{ booking.country }})
-                                </li>
-                                <li class="font-weight-bold p-3">
-                                    {{ booking.description }}
-                                </li>
-                                <li class="p-1">
-                                    {{ booking.sleeping_num }} couchage(s), {{ booking.area }} m²
-                                </li>
-                                <li class="font-weight-bold p-1">
-                                    {{ booking.price }} € par nuit
-                                </li>
-                            </ul>
-                        </li>
-                        <div class="align-self-end card-body p-2">
-                            <a href="{{ route( 'rent-detail', { 'id': booking.renting_id } ) }}" class="btn btn-success mx-3">Voir le détail</a>
-                        </div>
-                    </div>
-                {% endfor %}
+                <div class="card-body d-flex p-0">
+                    <li class="d-flex card-body p-0">
+                        {% if bookings is empty %}
+                            <div class="card-body m-5">
+                                <p class="font-weight-bolder" style="font-size: x-large">Aucune location ne répond à vos critères.</p>
+                            </div>
+                        {% endif %}
+                        <ul class="list-unstyled">
+                            {% for booking in bookings %}
+                                <div class="d-flex flex-row card m-3">
+                                    <div class="card m-3 w-75">
+                                        <li class="font-weight-bolder text-primary card-body p-2">
+                                            <p class="pl-1" style="font-size: x-large">Location confirmé du {{ booking.start_date }} au {{ booking.end_date }}</p>
+                                            <p class="font-italic pl-4">{{ booking.msg_price_total }}</p>
+                                        </li>
+                                        <li class="d-flex card-body">
+                                            <ul class="list-unstyled">
+                                                <li class="p-1">
+                                                    <em>{{ booking.renting_type_label }}</em>
+                                                </li>
+                                                <li class="p-1">
+                                                    {{ booking.city }} ({{ booking.country }})
+                                                </li>
+                                                <li class="font-weight-bold p-3">
+                                                    {{ booking.description }}
+                                                </li>
+                                                <li class="p-1">
+                                                    {{ booking.sleeping_num }} couchage(s), {{ booking.area }} m²
+                                                </li>
+                                                <li class="font-weight-bold p-1">
+                                                    {{ booking.price }} € par nuit
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <div class="align-self-end card-body p-2">
+                                            <a href="{{ route( 'rent-detail', { 'id': booking.renting_id } ) }}" class="btn btn-success mx-3">Voir le détail</a>
+                                        </div>
+                                    </div>
+                                    <div class="card m-3 h-25 w-25">
+                                        <div class="card-body d-flex justify-content-center align-items-center">
+                                            {% if booking.medium_bind is not null %}
+                                                <img src="{{ asset(booking.medium_bind) }}" alt="">
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                </div>
             </ul>
         </div>
     </div>

@@ -32,8 +32,10 @@ abstract class FieldChecker
     public const START_DATE_MISSING = -22;
     public const USERNAME_EXIST = -23;
     public const USERNAME_MISSING = -24;
+    public const WRONG_INTERVAL_BOOKING = -25;
+    public const WRONG_INTERVAL_UNAVAILABILITY = -26;
 
-    public static function checkBookingFields( array $data ): int
+    public static function checkDatesFields(array $data ): int
     {
         $start_date = 'start_date';
         $end_date = 'end_date';
@@ -58,6 +60,37 @@ abstract class FieldChecker
         $interval = DateManager::diffInvertDateFormat( $data[ $start_date ], $data[ $end_date], '/' );
 
         if( $interval->invert === 1 || $interval->days === 0 ) return self::END_DATE_NOT_MATCH;
+
+        return 0;
+    }
+
+    public static function checkDatesFieldsWithDB(array $data ): int
+    {
+        $start_date = 'start_date';
+        $end_date = 'end_date';
+        $renting_id = 'renting_id';
+
+        $unavailabilities = RepositoryManager::manager()->unavailabilityRepository()->findByRentingId( (int) $data[$renting_id] );
+
+        foreach( $unavailabilities as $unavailability ) {
+            $unavailability->start_date = DateManager::invertDateFormat( $unavailability->start_date, '-', '/' );
+            $unavailability->end_date = DateManager::invertDateFormat( $unavailability->end_date, '-', '/' );
+
+            $isOnInterval = DateManager::isOnDateInterval( $unavailability->start_date, $unavailability->end_date, $data[$start_date], $data[$end_date], '/' );
+
+            if( $isOnInterval ) return self::WRONG_INTERVAL_UNAVAILABILITY;
+        }
+
+        $bookings = RepositoryManager::manager()->bookingRepository()->findByRentingId( (int) $data[$renting_id] );
+
+        foreach( $bookings as $booking ) {
+            $booking->start_date = DateManager::invertDateFormat( $booking->start_date, '-', '/' );
+            $booking->end_date = DateManager::invertDateFormat( $booking->end_date, '-', '/' );
+
+            $isOnInterval = DateManager::isOnDateInterval( $booking->start_date, $booking->end_date, $data[$start_date], $data[$end_date], '/' );
+
+            if( $isOnInterval ) return self::WRONG_INTERVAL_BOOKING;
+        }
 
         return 0;
     }

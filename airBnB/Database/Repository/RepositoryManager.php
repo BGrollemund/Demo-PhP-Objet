@@ -31,6 +31,9 @@ class RepositoryManager
     private $roleRepository = null;
     public function roleRepository(): RoleRepository { return $this->roleRepository; }
 
+    private $unavailabilityRepository = null;
+    public function unavailabilityRepository(): UnavailabilityRepository { return $this->unavailabilityRepository; }
+
     private $userRepository = null;
     public function userRepository(): UserRepository { return $this->userRepository; }
 
@@ -52,6 +55,7 @@ class RepositoryManager
         $this->rentingRepository = new RentingRepository($pdo);
         $this->rentingTypeRepository = new RentingTypeRepository($pdo);
         $this->roleRepository = new RoleRepository($pdo);
+        $this->unavailabilityRepository = new UnavailabilityRepository($pdo);
         $this->userRepository = new UserRepository($pdo);
     }
 

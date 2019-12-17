@@ -11,6 +11,15 @@ class MediumRepository extends Repository
 {
     public function table(): string { return 'media'; }
 
+    #region Recherche dans la bdd
+
+
+
+    #endregion Recherche dans la bdd
+
+
+    #region Changement dans la bdd
+
     public function insert( Medium $medium ): int
     {
         $query = 'INSERT INTO '.$this->table().
@@ -25,4 +34,6 @@ class MediumRepository extends Repository
 
         return $id;
     }
+
+    #endregion Changement dans la bdd
 }

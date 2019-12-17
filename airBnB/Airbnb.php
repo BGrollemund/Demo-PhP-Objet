@@ -70,6 +70,10 @@ class Airbnb
             'namespace' => 'AirBnB\Http\Controller'
         ];
 
+        $attr_universal = [
+            'namespace' => 'AirBnB\Http\Controller'
+        ];
+
         $attr_user = [
             'namespace' => 'AirBnB\Http\Controller',
             'middleware' => [ AuthMiddleware::class, UserMiddleware::class ]
@@ -83,6 +87,7 @@ class Airbnb
         $this->router
             ->group( $attr_renter, Routes::renter() )
             ->group( $attr_subscriber, Routes::subscriber() )
+            ->group( $attr_universal, Routes::universal() )
             ->group( $attr_user, Routes::user() )
             ->group( $attr_visitor, Routes::visitor() )
 
@@ -95,12 +100,10 @@ class Airbnb
             $response = new HtmlResponse(URLUtils::get404(), 404);
             $this->router->getPublisher()->publish($response);
         }
-        /*
         catch( Throwable $e ) {
             $response = new HtmlResponse( 'Server Error.', 500 );
             $this->router->getPublisher()->publish($response);
         }
-        */
     }
 
     private function loadTwig(): void

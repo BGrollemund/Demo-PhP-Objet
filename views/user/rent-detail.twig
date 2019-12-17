@@ -5,7 +5,7 @@
         <div class="card w-100">
             <ul class="list-unstyled">
                 <div class="card-body d-flex">
-                    <div class="card m-3 w-75">
+                    <div class="card m-1 w-75">
                         <li class="d-flex card-body m-5 p-2">
                             <ul class="d-flex flex-column list-unstyled">
                                 <li class="p-1">
@@ -54,6 +54,12 @@
                                             {% if form_status.hasError( 'end_date' ) %}
                                                 <br><span class="invalid-feedback">{{ form_status.getError( 'end_date' ) }}</span>
                                             {% endif %}
+                                            {% if form_status.hasError( 'interval_booking' ) %}
+                                                <br><span class="text-danger">{{ form_status.getError( 'interval_booking' ) }}</span>
+                                            {% endif %}
+                                            {% if form_status.hasError( 'interval_unavailability' ) %}
+                                                <br><span class="text-danger">{{ form_status.getError( 'interval_unavailability' ) }}</span>
+                                            {% endif %}
                                         </label>
 
                                         <input type="submit" class="btn btn-success mt-3 mx-5" value="Réserver">
@@ -62,11 +68,45 @@
                             </ul>
                         </li>
                     </div>
-                    <div class="card m-3 h-25 w-25">
-                        <div class="card-body d-flex justify-content-center align-items-center">
-                            {% if renting.medium_bind is not null %}
-                                <img src="{{ asset(renting.medium_bind) }}" alt="">
-                            {% endif %}
+                    <div class="card m-1 w-25">
+                        <div>
+                            <div class="card-body d-flex justify-content-center align-items-center">
+                                {% if renting.medium_bind is not null %}
+                                    <img src="{{ asset(renting.medium_bind) }}" alt="">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    {% if unavailabilities is not empty %}
+                                        <div class="mb-1">
+                                            Périodes d'indisponibilité :
+                                        </div>
+                                        <ul class="list-unstyled">
+                                            {% for unavailability in unavailabilities %}
+                                                <li>
+                                                    {{ unavailability }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    {% if bookings is not empty %}
+                                        <div class="mb-1">
+                                            Périodes de location :
+                                        </div>
+                                        <ul class="list-unstyled">
+                                            {% for booking in bookings %}
+                                                <li>
+                                                    {{ booking }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

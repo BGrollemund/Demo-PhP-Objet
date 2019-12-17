@@ -11,6 +11,8 @@ class ProfileRepository extends Repository
 {
     protected function table(): string { return 'profiles'; }
 
+    #region Recherche dans la bdd
+
     public function findByUsername(string $username ): ?Profile
     {
         $query = 'SELECT * FROM '.$this->table().' WHERE username=:username ';
@@ -23,6 +25,11 @@ class ProfileRepository extends Repository
 
         return $user_data ? new Profile( $user_data ) : null;
     }
+
+    #endregion Recherche dans la bdd
+
+
+    #region Changement dans la bdd
 
     public function insert( Profile $profile ): int
     {
@@ -37,4 +44,6 @@ class ProfileRepository extends Repository
 
         return $id;
     }
+
+    #endregion Changement dans la bdd
 }

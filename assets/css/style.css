@@ -4,3 +4,7 @@ header span {
     font-weight: bold;
     text-decoration: none;
 }
+
+header a:hover {
+    text-decoration: none;
+}

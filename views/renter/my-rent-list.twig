@@ -9,6 +9,11 @@
 {% block content %}
     <div class="d-flex justify-content-center">
         <div class="card w-100">
+            {% if rentings is empty %}
+                <div class="card-body m-5">
+                    <p class="font-weight-bolder" style="font-size: x-large">Aucune location ne répond à vos critères.</p>
+                </div>
+            {% endif %}
             <ul class="list-unstyled">
                 {% for renting in rentings %}
                     <div class="card m-3">
@@ -40,7 +45,14 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <div class="align-self-end card-body p-2">
+                                <div class="d-flex card-body p-2">
+                                    <form action="{{ route( 'my-rent-unavailability' ) }}" method="post">
+                                        <input type="hidden" name="renting_id" value="{{ renting.id }}">
+                                        <input type="submit" class="btn btn-success mx-3" value="Gérer les disponibilités">
+                                    </form>
+
+                                    <div class="flex-grow-1"></div>
+
                                     <form action="{{ route( 'my-rent-edit' ) }}" method="post">
                                         <input type="hidden" name="renting_id" value="{{ renting.id }}">
                                         <input type="submit" class="btn btn-success mx-3" value="Modifier">

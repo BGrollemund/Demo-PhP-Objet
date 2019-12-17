@@ -11,6 +11,8 @@ class RoleRepository extends Repository
 {
     protected function table(): string { return 'roles'; }
 
+    #region Recherche dans la bdd
+
     public function findById(int $id ): ?Role
     {
         $query = 'SELECT * FROM '.$this->table().' WHERE id=:role_id ';
@@ -36,4 +38,13 @@ class RoleRepository extends Repository
 
         return $label_data ? $label_data[ 'id' ] : 0;
     }
+
+    #endregion Recherche dans la bdd
+
+
+    #region Changement dans la bdd
+
+
+
+    #endregion Changement dans la bdd
 }

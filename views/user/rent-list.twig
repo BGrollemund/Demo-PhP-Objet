@@ -7,6 +7,7 @@
 {% block user_menu %}
     <a href="{{ route( 'rent-list' ) }}" class="btn btn-success mx-3">Liste des locations</a>
     <a href="{{ route( 'rent-manager' ) }}" class="btn btn-success mx-3">Mes réservations</a>
+    <a href="{{ route( 'rent-favorites' ) }}" class="btn btn-success mx-3">Mes favoris</a>
 {%  endblock %}
 
 
@@ -18,9 +19,58 @@
     </div>
 {%  endblock %}
 
+{% block sort_btn %}
+    <div class="w-100">
+        {% if show_menu_sort %}
+        <form action="{{ route( 'rent-list' ) }}" method="get">
+            <div class="m-3 d-flex justify-content-center form-group">
+                <input type="submit" class="btn btn-success mx-3 col-1" value="Trier">
+                <select name="order" class="form-control mx-1 col-2">
+                    <option value="">Prix</option>
+                    <option value="ASC">Croissant</option>
+                    <option value="DESC">Décroissant</option>
+                </select>
+                <select name="renting_type_id" class="form-control mx-1 col-2">
+                    <option value="">Type</option>
+                    {% for renting_type in renting_types %}
+                        <option value="{{ renting_type.id }}">
+                            {{ renting_type.label }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <select name="sleeping_num" class="form-control mx-1 col-2">
+                    <option value="">Couchage(s)</option>
+                    <option value="2">2 ou moins</option>
+                    <option value="4">entre 2 et 4</option>
+                    <option value="6">entre 4 et 6</option>
+                    <option value="8">entre 6 et 8</option>
+                    <option value="more">8 ou plus</option>
+                </select>
+                <input type="submit" class="btn btn-success mx-3 col-1" value="Trier">
+            </div>
+            <div class="m-3 d-flex justify-content-center form-group">
+                <div class="form-check">
+                    {% for equipment in equipments %}
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" class="form-check-input" name="equipments[]" value="{{ equipment.id }}">
+                            <label class="form-check-label">{{ equipment.label }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </form>
+        {% endif %}
+    </div>
+{% endblock %}
+
 {% block content %}
     <div class="d-flex justify-content-center">
         <div class="card w-100">
+            {% if rentings is empty %}
+                <div class="card-body m-5">
+                    <p class="font-weight-bolder" style="font-size: x-large">Aucune location ne répond à vos critères.</p>
+                </div>
+            {% endif %}
             <ul class="list-unstyled">
                 {% for renting in rentings %}
                     <div class="card m-3">
@@ -52,7 +102,13 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <div class="align-self-end card-body p-2">
+                                <div class="d-flex card-body p-2">
+                                    {% if renting.is_favorite %}
+                                        <a href="{{ route( 'favorite-remove', { 'id': renting.id } ) }}" class="btn btn-danger mx-3">Enlever des favoris</a>
+                                    {% else %}
+                                        <a href="{{ route( 'favorite-add', { 'id': renting.id } ) }}" class="btn btn-success mx-3">Ajouter aux favoris</a>
+                                    {% endif %}
+                                    <div class="flex-grow-1"></div>
                                     <a href="{{ route( 'rent-detail', { 'id': renting.id } ) }}" class="btn btn-success mx-3">Voir le détail</a>
                                 </div>
                             </div>

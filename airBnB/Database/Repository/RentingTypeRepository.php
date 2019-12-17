@@ -10,6 +10,8 @@ class RentingTypeRepository extends Repository
 {
     protected function table(): string { return 'renting_types'; }
 
+    #region Recherche dans la bdd
+
     public function findAll(): array
     {
         $query = 'SELECT * FROM '.$this->table();
@@ -41,4 +43,15 @@ class RentingTypeRepository extends Repository
 
         return $data ? $data[ 'label' ] : '';
     }
+
+    #endregion Recherche dans la bdd
+
+
+    #region Changement dans la bdd
+
+
+
+    #endrregion Changement dans la bdd
+
+
 }

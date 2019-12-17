@@ -61,6 +61,15 @@ abstract class Routes
                 ->name('my-rent-manager')
                 ->get('/gestion-annonces', 'RenterController@booked')
 
+                ->name('my-rent-unavailability')
+                ->get('/modifier-disponibilite', 'RenterController@unavailability')
+
+                ->name('my-rent-unavailability')
+                ->post('/modifier-disponibilite', 'RenterController@unavailability')
+
+                ->name('my-rent-unavailability-add')
+                ->post('/modification-disponibilite', 'RenterController@unavailabilityAdd')
+
             ;
         };
     }
@@ -81,17 +90,44 @@ abstract class Routes
         return function ( Router $router )
         {
             $router
+                ->name('favorite-add')
+                ->get('/ajouter-favori/{id}', 'UserController@favoriteAdd')
+
+                ->name('favorite-remove')
+                ->get('/supprimer-favori/{id}', 'UserController@favoriteRemove')
+
                 ->name('rent-book')
                 ->post('/locations', 'UserController@book')
 
                 ->name('rent-detail')
                 ->get('/locations/{id}', 'UserController@show')
 
+                ->name('rent-favorites')
+                ->get('/favoris', 'UserController@favorites')
+
                 ->name('rent-list')
                 ->get('/locations', 'UserController@index')
 
                 ->name('rent-manager')
                 ->get('/mes-locations', 'UserController@booked')
+            ;
+        };
+    }
+
+    public static function universal(): Closure
+    {
+        return function ( Router $router )
+        {
+            $router
+                ->name('about-us')
+                ->get('/a-propos', 'PageController@aboutUs')
+
+                ->name('terms-of-use')
+                ->get('/cgu', 'PageController@termsUse')
+
+                ->name('legal-mentions')
+                ->get('/mentions-legales', 'PageController@legalMentions')
+
             ;
         };
     }

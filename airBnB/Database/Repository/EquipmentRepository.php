@@ -11,6 +11,8 @@ class EquipmentRepository extends Repository
 {
     protected function table(): string { return 'equipments'; }
 
+    #region Recherche dans la bdd
+
     public function findAll(): array
     {
         $query = 'SELECT * FROM '.$this->table();
@@ -57,4 +59,13 @@ class EquipmentRepository extends Repository
 
         return $equipments;
     }
+
+    #endregion Recherche dans la bdd
+
+
+    #region Changement dans la bdd
+
+
+
+    #endregion Changement dans la bdd
 }

@@ -1,0 +1,75 @@
+{% extends "renter/my-rent-list.twig" %}
+
+{% block content %}
+    <div class="d-flex justify-content-center">
+        <div class="card w-100">
+            <div class="d-flex card-body m-3">
+                <div class="card w-75 m-1">
+                    <form action="{{ route( 'my-rent-unavailability-add' ) }}" method="post" class="card-body">
+                        <input type="hidden" name="renting_id" value="{{ renting_id }}">
+
+                        <div class="mb-3" style="font-size: larger">
+                            Indiquer une période où votre location <span class="font-weight-bolder">ne sera pas disponible </span>:
+                        </div>
+
+                        <label class="form-row">
+                            <span class="mx-2">Indisponible du :</span>
+                            <input type="text" name="start_date" class="form-control {% if form_status.hasError('start_date') %} is-invalid{% endif %} mt-2"  value="{{ form_status.getValue( 'start_date' ) }}" placeholder="jj/mm/aaaa">
+                            {% if form_status.hasError( 'start_date' ) %}
+                                <br><span class="invalid-feedback">{{ form_status.getError( 'start_date' ) }}</span>
+                            {% endif %}
+                        </label>
+
+                        <label class="form-row">
+                            <span class="mx-2">au :</span>
+                            <input type="text" name="end_date" class="form-control {% if form_status.hasError('end_date') %} is-invalid{% endif %} mt-2"  value="{{ form_status.getValue( 'end_date' ) }}" placeholder="jj/mm/aaaa">
+                            {% if form_status.hasError( 'end_date' ) %}
+                                <br><span class="invalid-feedback">{{ form_status.getError( 'end_date' ) }}</span>
+                            {% endif %}
+                            {% if form_status.hasError( 'interval_booking' ) %}
+                                <br><span class="text-danger">{{ form_status.getError( 'interval_booking' ) }}</span>
+                            {% endif %}
+                            {% if form_status.hasError( 'interval_unavailability' ) %}
+                                <br><span class="text-danger">{{ form_status.getError( 'interval_unavailability' ) }}</span>
+                            {% endif %}
+                        </label>
+
+                        <input type="submit" class="btn btn-success mt-3 mx-5" value="Ajouter">
+                    </form>
+                </div>
+                <div class="card w-50 m-1">
+                    <div class="card-body">
+                        <div>
+                            {% if unavailabilities is not empty %}
+                                <div class="mb-1">
+                                    Périodes d'indisponibilité :
+                                </div>
+                                <ul class="list-unstyled">
+                                    {% for unavailability in unavailabilities %}
+                                        <li class="ml-3">
+                                            {{ unavailability }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div>
+                            {% if bookings is not empty %}
+                                <div class="mb-1">
+                                    Périodes de location :
+                                </div>
+                                <ul class="list-unstyled">
+                                    {% for booking in bookings %}
+                                        <li class="ml-3">
+                                            {{ booking }}
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
